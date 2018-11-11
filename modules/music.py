@@ -148,9 +148,10 @@ class MusicPlayer:
 
             try:
                 # Wait for the next song. If we timeout cancel the player and disconnect...
-                async with timeout(300):  # 5 minutes...
+                async with timeout(60):  # 1minute
                     source = await self.queue.get()
             except asyncio.TimeoutError:
+                await self._channel.send('Player inactive for 1 minute, leaving the channel.')
                 return self.destroy(self._guild)
 
             if not isinstance(source, YTDLSource):
