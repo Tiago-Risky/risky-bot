@@ -4,7 +4,10 @@ from discord.ext import commands
 
 class General:
     # General purpose commands, these are meant to be further organised in other modules, if needed
-    __slots__: ('bot', 'current_game', 'current_status')
+    #__slots__: ('bot', 'current_game', 'current_status')
+    bot = None
+    current_game = None
+    current_status = None
 
     def __init__(self, bot):
         self.bot = bot
