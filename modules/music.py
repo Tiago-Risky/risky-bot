@@ -168,8 +168,8 @@ class MusicPlayer:
             self.current = source
 
             self._guild.voice_client.play(source, after=lambda _: self.bot.loop.call_soon_threadsafe(self.next.set))
-            self.np = await self._channel.send('**Now Playing:** `{}` requested by '.format(source.title)
-                                               '`{}`'.format(source.requester))
+            self.np = await self._channel.send('**Now Playing:** `{}` requested by \
+                                               `{}`'.format(source.title,source.requester))
             await self.next.wait()
 
             # Make sure the FFmpeg process is cleaned up.
