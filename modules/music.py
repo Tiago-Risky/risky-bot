@@ -380,8 +380,8 @@ class Music:
         except discord.HTTPException:
             pass
 
-        player.np = await ctx.send('**Now Playing:** `{}` '.format(vc.source.title)
-                                   'requested by `{}`'.format(vc.source.requester))
+        player.np = await ctx.send('**Now Playing:** `{}` \
+                                   requested by `{}`'.format(vc.source.title, vc.source.requester))
 
     @commands.command(name='volume', aliases=['vol'])
     async def change_volume(self, ctx, *, vol: float):
