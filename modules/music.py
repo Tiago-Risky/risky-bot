@@ -90,7 +90,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
             # take first item from a playlist
             data = data['entries'][0]
 
-        await ctx.send(f'```ini\n[Added {data["title"]} to the Queue.]\n```', delete_after=15)
+        await ctx.send('```ini\n[Added {} to the Queue.]\n```'.format(data["title"]), delete_after=15)
 
         if download:
             source = ytdl.prepare_filename(data)
@@ -160,16 +160,16 @@ class MusicPlayer:
                 try:
                     source = await YTDLSource.regather_stream(source, loop=self.bot.loop)
                 except Exception as e:
-                    await self._channel.send(f'There was an error processing your song.\n'
-                                             f'```css\n[{e}]\n```')
+                    await self._channel.send('There was an error processing your song.\n'
+                                             '```css\n[{}]\n```'.format(e))
                     continue
 
             source.volume = self.volume
             self.current = source
 
             self._guild.voice_client.play(source, after=lambda _: self.bot.loop.call_soon_threadsafe(self.next.set))
-            self.np = await self._channel.send(f'**Now Playing:** `{source.title}` requested by '
-                                               f'`{source.requester}`')
+            self.np = await self._channel.send('**Now Playing:** `{}` requested by '.format(source.title)
+                                               '`{}`'.format(source.requester))
             await self.next.wait()
 
             # Make sure the FFmpeg process is cleaned up.
@@ -263,14 +263,14 @@ class Music:
             try:
                 await vc.move_to(channel)
             except asyncio.TimeoutError:
-                raise VoiceConnectionError(f'Moving to channel: <{channel}> timed out.')
+                raise VoiceConnectionError('Moving to channel: <{}> timed out.'.format(channel))
         else:
             try:
                 await channel.connect()
             except asyncio.TimeoutError:
-                raise VoiceConnectionError(f'Connecting to channel: <{channel}> timed out.')
+                raise VoiceConnectionError('Connecting to channel: <{}> timed out.'.format(channel))
 
-        await ctx.send(f'Connected to: **{channel}**', delete_after=20)
+        await ctx.send('Connected to: **{}**'.format(channel), delete_after=20)
 
     @commands.command(name='play', aliases=['sing'])
     async def play_(self, ctx, *, search: str):
@@ -310,7 +310,7 @@ class Music:
             return
 
         vc.pause()
-        await ctx.send(f'**`{ctx.author}`**: Paused the song!')
+        await ctx.send('**`{}`**: Paused the song!'.format(ctx.author))
 
     @commands.command(name='resume')
     async def resume_(self, ctx):
@@ -323,7 +323,7 @@ class Music:
             return
 
         vc.resume()
-        await ctx.send(f'**`{ctx.author}`**: Resumed the song!')
+        await ctx.send('**`{}`**: Resumed the song!'.format(ctx.author))
 
     @commands.command(name='skip')
     async def skip_(self, ctx):
@@ -339,7 +339,7 @@ class Music:
             return
 
         vc.stop()
-        await ctx.send(f'**`{ctx.author}`**: Skipped the song!')
+        await ctx.send('**`{}`**: Skipped the song!'.format(ctx.author))
 
     @commands.command(name='queue', aliases=['q', 'playlist'])
     async def queue_info(self, ctx):
@@ -356,8 +356,9 @@ class Music:
         # Grab up to 5 entries from the queue...
         upcoming = list(itertools.islice(player.queue._queue, 0, 5))
 
-        fmt = '\n'.join(f'**`{_["title"]}`**' for _ in upcoming)
-        embed = discord.Embed(title=f'Upcoming - Next {len(upcoming)}', description=fmt)
+        #fmt = '\n'.join(f'**`{_["title"]}`**' for _ in upcoming)
+        fmt = 'oopsie doopsie! error displaying the queue! XD the dev is still working on this!'
+        embed = discord.Embed(title='Upcoming - Next {}'.format(len(upcoming)), description=fmt)
 
         await ctx.send(embed=embed)
 
@@ -379,8 +380,8 @@ class Music:
         except discord.HTTPException:
             pass
 
-        player.np = await ctx.send(f'**Now Playing:** `{vc.source.title}` '
-                                   f'requested by `{vc.source.requester}`')
+        player.np = await ctx.send('**Now Playing:** `{}` '.format(vc.source.title)
+                                   'requested by `{}`'.format(vc.source.requester))
 
     @commands.command(name='volume', aliases=['vol'])
     async def change_volume(self, ctx, *, vol: float):
@@ -405,7 +406,7 @@ class Music:
             vc.source.volume = vol / 100
 
         player.volume = vol / 100
-        await ctx.send(f'**`{ctx.author}`**: Set the volume to **{vol}%**')
+        await ctx.send('**`{}`**: Set the volume to **{}%**'.format(ctx.author,vol))
 
     @commands.command(name='stop')
     async def stop_(self, ctx):
